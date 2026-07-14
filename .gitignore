@@ -1,0 +1,5 @@
+vscode/
+__pycache__/
+vector_db/
+venv/
+dataset/

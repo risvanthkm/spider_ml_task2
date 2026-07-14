@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrustyMed — Evidence-Based Healthcare Assistant</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+<!-- marked.js turns the model's markdown answer into HTML -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<!-- DOMPurify sanitizes that HTML before it hits the DOM, since the answer
+     text comes from an LLM and should never be trusted blindly with innerHTML -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+<!-- PapaParse streams the source CSV in chunks so the side panel stays
+     smooth even on a large file -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+
+<div class="shell">
+
+    <!-- ============ header ============ -->
+    <header class="topbar">
+
+        <div class="topbar-left">
+            <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true">
+                <rect width="32" height="32" rx="9" fill="var(--clinical)"/>
+                <path d="M5 17h4.2l2-6.4 3.2 12 2.4-8.4 1.6 2.8h6.2" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="brand-text">
+                <h1>TrustyMed</h1>
+                <p class="subtitle">Evidence-based healthcare information assistant</p>
+            </div>
+        </div>
+
+        <div class="topbar-right">
+
+            <div class="health-pill" id="health-pill" title="Backend connection status">
+                <span class="health-dot" id="health-dot"></span>
+                <span class="health-label" id="health-label">Checking…</span>
+            </div>
+
+            <button class="ctrl-btn" id="csv-toggle-btn" type="button" aria-pressed="false">
+                <svg viewBox="0 0 20 20" fill="none"><rect x="3" y="4" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M3 8.5h14M8 4v12" stroke="currentColor" stroke-width="1.5"/></svg>
+                <span>Source data</span>
+            </button>
+
+            <button class="ctrl-btn" id="export-btn" type="button">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M10 3v9.5M10 12.5L6.5 9M10 12.5L13.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 14.5v1a1.5 1.5 0 0 0 1.5 1.5h9a1.5 1.5 0 0 0 1.5-1.5v-1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Export chat</span>
+            </button>
+
+            <button class="ctrl-btn" id="clear-btn" type="button">
+                <svg viewBox="0 0 20 20" fill="none"><path d="M4 6h12M8 6V4.5A1.5 1.5 0 0 1 9.5 3h1A1.5 1.5 0 0 1 12 4.5V6M15 6l-.6 9.4a1.5 1.5 0 0 1-1.5 1.4H7.1a1.5 1.5 0 0 1-1.5-1.4L5 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>Clear</span>
+            </button>
+
+            <button class="ctrl-btn theme-toggle" id="theme-toggle" type="button">
+                <svg class="icon-sun" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3.4" stroke="currentColor" stroke-width="1.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.3 4.7l-1.4 1.4M6.1 13.9l-1.4 1.4M15.3 15.3l-1.4-1.4M6.1 6.1 4.7 4.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                <svg class="icon-moon" viewBox="0 0 20 20" fill="none"><path d="M16.5 12.3A6.8 6.8 0 0 1 7.7 3.5 6.8 6.8 0 1 0 16.5 12.3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+                <span id="theme-label">Dark mode</span>
+            </button>
+
+        </div>
+
+    </header>
+
+    <!-- Signature element: a live ECG-style strip that doubles as the health
+         indicator. Scrolling waveform = backend reachable, flat red line =
+         unreachable, amber shimmer = checking. -->
+    <div class="pulse-strip checking" id="pulse-strip" aria-hidden="true">
+        <svg class="pulse-svg" id="pulse-svg" viewBox="0 0 1200 40" preserveAspectRatio="none">
+            <path id="pulse-path" d=""/>
+        </svg>
+    </div>
+
+    <div class="trust-strip">
+        <div class="trust-chip">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Trusted Medical Sources
+        </div>
+        <div class="trust-chip">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Confidence Estimation
+        </div>
+        <div class="trust-chip">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Safety Verification
+        </div>
+        <div class="trust-chip">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Evidence Grounded
+        </div>
+    </div>
+
+    <!-- ============ main body: chat + docked CSV panel ============ -->
+    <div class="body-row">
+
+        <main class="chat-col">
+
+            <div id="chat-window" class="chat-window" aria-live="polite">
+                <div class="chat-inner" id="chat-inner">
+
+                    <div class="message assistant">
+                        <div class="bubble">
+                            <h3>Welcome to TrustyMed</h3>
+                            <p>Ask a medical question and receive an answer generated from trusted healthcare resources.</p>
+                            <div class="confidence-card">
+                                <div class="confidence-title">
+                                    <svg viewBox="0 0 16 16" fill="none" class="shield-icon"><path d="M8 1.5 13.5 3.5V7.5C13.5 11 11.2 13.5 8 14.5C4.8 13.5 2.5 11 2.5 7.5V3.5L8 1.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+                                    <span class="confidence-label">Confidence</span>
+                                </div>
+                                <div class="progress-bar-track">
+                                    <div class="progress-bar-fill band-good" style="width:100%"></div>
+                                </div>
+                                <small>System ready</small>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <footer class="composer">
+                <div class="composer-inner">
+                    <input
+                        id="user-input"
+                        type="text"
+                        placeholder="Ask a medical question…"
+                        autocomplete="off"
+                    >
+                    <button id="send-btn" type="button" aria-label="Send message">
+                        <svg viewBox="0 0 20 20" fill="none"><path d="M3 10h13M11 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                </div>
+            </footer>
+
+        </main>
+
+        <!-- Source Ledger: docked, resizable panel showing the RAG's source CSV -->
+        <aside class="csv-panel" id="csv-panel">
+
+            <div class="csv-resize-handle" id="csv-resize-handle" title="Drag to resize"></div>
+
+            <div class="csv-panel-header">
+                <div>
+                    <h2>
+                        <svg viewBox="0 0 20 20" fill="none"><rect x="3" y="4" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M3 8.5h14M8 4v12" stroke="currentColor" stroke-width="1.5"/></svg>
+                        Source Ledger
+                    </h2>
+                    <p class="csv-subtitle" id="csv-subtitle">Loading…</p>
+                </div>
+                <button class="icon-btn" id="csv-close-btn" type="button" aria-label="Close source panel">
+                    <svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5 5 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+                </button>
+            </div>
+
+            <div class="csv-toolbar">
+
+                <div class="csv-jump">
+                    <label for="csv-row-input">Row #</label>
+                    <input id="csv-row-input" type="number" min="1" placeholder="e.g. 42">
+                    <button id="csv-jump-btn" type="button">Go</button>
+                </div>
+
+                <div class="csv-filter">
+                    <svg viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.4"/><path d="M13 13l-2.5-2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+                    <input id="csv-filter-input" type="text" placeholder="Search question, answer, source…">
+                </div>
+
+            </div>
+
+            <div class="csv-table-wrap" id="csv-table-wrap">
+                <table class="csv-table" id="csv-table">
+                    <colgroup id="csv-colgroup"></colgroup>
+                    <thead id="csv-thead"></thead>
+                    <tbody id="csv-tbody"></tbody>
+                </table>
+                <div class="csv-empty" id="csv-empty" hidden>No rows loaded yet.</div>
+            </div>
+
+        </aside>
+
+    </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
