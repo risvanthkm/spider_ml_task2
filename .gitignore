@@ -1,5 +1,7 @@
-vscode/
+.vscode/
 __pycache__/
 vector_db/
 venv/
 dataset/
+data/
+.ipynb_checkpoints/

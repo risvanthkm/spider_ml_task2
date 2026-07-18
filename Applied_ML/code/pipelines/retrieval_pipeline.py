@@ -27,11 +27,12 @@ class Claims(BaseModel):
 class Generation(BaseModel):
     answer : str
     sources : List[str]
-    row_ids : List[int]
+    row_ids : List[int | str]
     confidence_score : float
 
 llm = ChatOllama(model="gemma4")
 cross_encoder = CrossEncoder("BAAI/bge-reranker-v2-m3")
+
 embedding_model = HuggingFaceEmbeddings(model_name="BAAI/BGE-M3")
 vectorstore = Chroma(
     persist_directory=DB_FILEPATH,
@@ -94,6 +95,8 @@ def verify_final_answer(query, answer):
 def retrieve(query):
     rag_respone = {}
     caution = False
+
+    # Classifying the Query
     type_of_query = classifyQuery(query)
 
     if type_of_query == "SAFE":
@@ -150,12 +153,15 @@ def retrieve(query):
     print("Overall Confidence", confidence)
     if confidence > CONFIDENCE_THRESHOLD:
         corrected_resp = verify_final_answer(query, resp.answer)
+        print("Verified", corrected_resp)
 
         if corrected_resp:
+            rag_respone["sources"] = corrected_resp.sources
             rag_respone["confidence"] = corrected_resp.confidence
             rag_respone["content"] = corrected_resp.answer
             rag_respone["caution"] = caution
         else:   
+            rag_respone["sources"] = resp.sources
             rag_respone["confidence"] = confidence
             rag_respone["content"] = resp.answer
             rag_respone["caution"] = caution

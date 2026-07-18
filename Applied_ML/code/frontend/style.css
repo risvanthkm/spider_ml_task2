@@ -1,14 +1,3 @@
-/* ============================================================
-   TrustyMed — design tokens
-   Palette: cool "clinical paper" light mode / "night rounds" dark
-   mode, built around a deep clinical teal rather than a generic
-   SaaS blue. Semantic success/warning/danger stay conventional
-   traffic-light colors on purpose — a confidence readout is not
-   the place to get experimental with color meaning.
-   Type: Fraunces (display, used sparingly) + Inter (body) +
-   IBM Plex Mono (data readouts — percentages, timestamps, status)
-   ============================================================ */
-
 :root{
 
     --paper:#F5F7FA;
@@ -313,7 +302,7 @@ html[data-theme="dark"] .theme-toggle .icon-moon{ display:block; }
 
 .trust-chip svg{ width:13px; height:13px; color:var(--clinical); flex-shrink:0; }
 
-/* ---------- body row: chat + csv panel ---------- */
+/* ---------- body row ---------- */
 
 .body-row{
     flex:1;
@@ -669,219 +658,6 @@ html[data-theme="dark"] .theme-toggle .icon-moon{ display:block; }
 
 .toast.show{ opacity:1; transform:translate(-50%,0); }
 
-/* ---------- Source Ledger: docked, resizable CSV panel ---------- */
-
-.csv-panel{
-    position:relative;
-    width:0;
-    flex-shrink:0;
-    overflow:hidden;
-    background:var(--surface);
-    border-left:1px solid var(--line);
-    display:flex;
-    flex-direction:column;
-    transition:width .3s cubic-bezier(.22,.9,.32,1);
-}
-
-.csv-panel.open{ width:min(460px, 42vw); }
-.csv-panel.resizing{ transition:none; }
-
-.csv-resize-handle{
-    position:absolute;
-    top:0; left:0;
-    width:6px;
-    height:100%;
-    cursor:col-resize;
-    z-index:6;
-    background:transparent;
-    transition:background .15s ease;
-}
-
-.csv-resize-handle:hover, .csv-panel.resizing .csv-resize-handle{
-    background:var(--clinical);
-}
-
-.csv-panel-header{
-    display:flex;
-    align-items:flex-start;
-    justify-content:space-between;
-    gap:10px;
-    padding:16px 18px 12px 22px;
-    border-bottom:1px solid var(--line);
-}
-
-.csv-panel-header h2{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-family:var(--font-display);
-    font-size:17px;
-    font-weight:600;
-}
-
-.csv-panel-header h2 svg{ width:16px; height:16px; color:var(--clinical); }
-
-.csv-subtitle{
-    margin-top:4px;
-    font-family:var(--font-mono);
-    font-size:11.5px;
-    line-height:1.5;
-    color:var(--ink-muted);
-}
-
-.csv-toolbar{
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    gap:10px;
-    padding:12px 18px;
-    border-bottom:1px solid var(--line);
-    background:var(--surface-sunken);
-}
-
-.csv-jump{ display:flex; align-items:center; gap:7px; }
-
-.csv-jump label{ font-size:12px; color:var(--ink-muted); white-space:nowrap; }
-
-.csv-jump input{
-    width:78px;
-    padding:7px 9px;
-    border-radius:8px;
-    border:1px solid var(--line);
-    background:var(--surface);
-    color:var(--ink);
-    font-family:var(--font-mono);
-    font-size:12.5px;
-}
-
-.csv-jump input:focus{
-    outline:none;
-    border-color:var(--clinical);
-    box-shadow:0 0 0 3px var(--clinical-tint);
-}
-
-.csv-jump button{
-    padding:7px 13px;
-    border:none;
-    border-radius:8px;
-    background:var(--clinical);
-    color:#fff;
-    font-size:12px;
-    font-weight:600;
-    cursor:pointer;
-    transition:background .15s ease, transform .15s ease;
-}
-
-.csv-jump button:hover{ background:var(--clinical-deep); transform:translateY(-1px); }
-.csv-jump button:disabled{ opacity:.6; cursor:default; transform:none; }
-
-.csv-filter{
-    display:flex;
-    align-items:center;
-    gap:7px;
-    flex:1;
-    min-width:150px;
-    padding:7px 11px;
-    border-radius:8px;
-    border:1px solid var(--line);
-    background:var(--surface);
-}
-
-.csv-filter svg{ width:13px; height:13px; color:var(--ink-muted); flex-shrink:0; }
-
-.csv-filter input{
-    flex:1;
-    border:none;
-    outline:none;
-    background:transparent;
-    color:var(--ink);
-    font-size:12.5px;
-    font-family:var(--font-body);
-    min-width:0;
-}
-
-.csv-table-wrap{ flex:1; overflow:auto; position:relative; }
-
-.csv-table{
-    border-collapse:collapse;
-    width:100%;
-    table-layout:fixed;
-    font-size:12.5px;
-}
-
-.csv-table th, .csv-table td{
-    padding:9px 12px;
-    text-align:left;
-    border-bottom:1px solid var(--line);
-    vertical-align:top;
-}
-
-.csv-table th{
-    position:sticky;
-    top:0;
-    z-index:3;
-    background:var(--surface);
-    color:var(--ink-muted);
-    font-family:var(--font-mono);
-    font-size:10.5px;
-    text-transform:uppercase;
-    letter-spacing:.04em;
-    box-shadow:0 1px 0 var(--line);
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-.csv-table td.row-num, .csv-table th.row-num-col{
-    position:sticky;
-    left:0;
-    z-index:2;
-    background:var(--surface-sunken);
-    font-family:var(--font-mono);
-    color:var(--ink-muted);
-    text-align:right;
-}
-
-.csv-table th.row-num-col{ z-index:4; }
-
-.csv-table td.col-text{
-    white-space:normal;
-    word-break:break-word;
-    line-height:1.5;
-}
-
-.csv-table td.col-tag{ white-space:normal; }
-
-.tag-chip{
-    display:inline-block;
-    padding:3px 9px;
-    border-radius:999px;
-    font-size:11px;
-    font-weight:600;
-    line-height:1.4;
-}
-
-.tag-chip.source{ background:var(--clinical-tint); color:var(--clinical-deep); }
-.tag-chip.focus{ background:var(--surface-sunken); color:var(--ink-muted); border:1px solid var(--line); }
-
-.csv-table tbody tr:hover td{ background:var(--clinical-tint); }
-.csv-table tbody tr:hover td.row-num{ background:var(--clinical-tint); }
-
-.csv-table tbody tr.tick td.row-num{ color:var(--clinical); font-weight:700; }
-.csv-table tbody tr.tick td{ border-top:1px dashed var(--line); }
-
-.csv-table tbody tr[hidden]{ display:none; }
-
-.csv-table tbody tr.flash td{ animation:flashRow 1.6s ease; }
-
-.csv-table td.row-action{ text-align:right; }
-
-.csv-table td.row-action .copy-btn{
-    padding:4px 6px;
-}
-
-.csv-empty{ padding:40px 20px; text-align:center; color:var(--ink-muted); font-size:13.5px; }
-
 /* ---------- scrollbar ---------- */
 
 ::-webkit-scrollbar{ width:8px; height:8px; }
@@ -920,11 +696,6 @@ html[data-theme="dark"] .theme-toggle .icon-moon{ display:block; }
     100%{ transform:scale(1); }
 }
 
-@keyframes flashRow{
-    0%{ background:var(--clinical-tint); }
-    100%{ background:transparent; }
-}
-
 /* ---------- reduced motion ---------- */
 
 @media (prefers-reduced-motion: reduce){
@@ -948,13 +719,4 @@ html[data-theme="dark"] .theme-toggle .icon-moon{ display:block; }
     .bubble{ max-width:92%; }
 
     .subtitle{ display:none; }
-
-    .csv-panel.open{
-        position:fixed;
-        inset:0;
-        width:100%;
-        z-index:40;
-    }
-
-    .csv-resize-handle{ display:none; }
 }

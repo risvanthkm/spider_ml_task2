@@ -42,15 +42,15 @@ Return ONLY a valid JSON object.
         1,
         2
     ],
-    "confidence_score": 0.0
+    "confidence_score": x.x
 }
 
 Rules:
-- answer must contain the complete final answer.
+- answer must contain the complete final answer with citations with row_id and source name (very important).
 - Cite Row IDs inside the answer.
 - sources must contain every referenced source.
 - row_ids must contain every referenced Row ID.
-- confidence_score must be a number between 0 and 1.
+- confidence_score must be a float between 0 and 1.
 - Do not return markdown.
 - Do not explain your answer.
 - Do not return any text outside the JSON object.
@@ -73,7 +73,7 @@ Requirements:
 - Fix every issue mentioned in the verification report.
 - Remove unsupported or dangerous medical claims.
 - Ensure every factual statement is supported by the retrieved evidence.
-- Add or correct citations where necessary.
+- Add or correct citations where necessary with row_id and source name (very important).
 - Do not introduce new information that is not present in the evidence.
 - Preserve as much of the original answer as possible while correcting its problems.
 - Do not comment on the corrections.
@@ -84,7 +84,7 @@ Requirements:
 OUTPUT
 --------------------------------------------------------
 
-Return ONLY a valid JSON object.
+Return ONLY a valid JSON object (need not be same values).
 
 {
     "answer": "<corrected answer with Row ID citations>",
@@ -96,7 +96,7 @@ Return ONLY a valid JSON object.
         1,
         2
     ],
-    "confidence_score": 0.0
+    "confidence_score": x.x
 }
 
 Rules:
@@ -104,7 +104,7 @@ Rules:
 - Preserve or add Row ID citations.
 - sources must contain every referenced source.
 - row_ids must contain every referenced Row ID.
-- confidence_score must be between 0 and 1.
+- confidence_score must be between 0 and 1 (float).
 - Do not return markdown.
 - Do not explain the corrections.
 - Do not return any text outside the JSON object.
@@ -174,7 +174,7 @@ list every required correction in changes_to_be_made.
 OUTPUT
 --------------------------------------------------------
 
-Return ONLY a valid JSON object.
+Return ONLY a valid JSON object (need not be same values).
 
 {
     "claims": [
@@ -268,7 +268,7 @@ Classification Rules:
 OUTPUT
 --------------------------------------------------------
 
-Return ONLY a valid JSON object.
+Return ONLY a valid JSON object (need not be same values).
 
 {
     "type": "SAFE"
