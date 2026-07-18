@@ -166,6 +166,9 @@ The Candidate Memory Cell generates a set of potential new memory values using a
 
 The Output Gate determines which information from the updated cell state (C_t) is exposed as the hidden state (h_t	). If it is zero we retain no information from the Cell state. It filters the cell state's information using a sigmoid gate, enabling the LSTM to produce the appropriate output while preserving long-term memory internally.
 
+<img width="850" height="494" alt="image" src="https://github.com/user-attachments/assets/d691ad91-d357-45ec-8091-068ab99e9423" />
+
+
 ## Training Stability
 
 The custom LSTM converged in approximately **20 epochs**. After experimenting with different optimizers, learning rates, and epochs, the following configuration produced the best balance between convergence speed and forecasting performance. Throughout training, no significant gradient instability or loss oscillations were observed, indicating stable optimization.
@@ -296,6 +299,6 @@ flowchart TD
 
 [View Model Architecture](/Applied_ML/architecture/pipeline_architecture.md)
 
-[Read Design Choices]()
+[Read Design Choices](/base_task/report/Comparison.md)
 
 ---
