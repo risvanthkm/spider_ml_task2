@@ -294,7 +294,7 @@ flowchart TD
 - **Transparent Citations** – Returns evidence sources and document references alongside every generated response.
 
 
-[View Model Architecture]()
+[View Model Architecture](/Applied_ML/architecture/pipeline_architecture.md)
 
 [Read Design Choices]()
 
