@@ -11,15 +11,15 @@
 
 | Choice | Rationale |
 |---|---|
-| Two-stage retrieval: broad hybrid retrieval → cross-encoder rerank | Bi-encoder/BM25 retrieval is fast but scores query and document independently, so it's better at recall than precision; the cross-encoder (bge-reranker-v2-m3) re-scores the smaller candidate set jointly for better top-k precision |
+| Hybrid retrieval → cross-encoder rerank | Bi-encoder/BM25 retrieval is fast but scores query and document independently, the cross-encoder (bge-reranker-v2-m3) re-ranks the chunks comparing query and chunks together |
 | Sigmoid-normalizing rerank scores | Cross-encoder outputs are raw logits, not bounded 0–1 — normalizing puts them on the same scale as cosine similarity so they can be combined in the confidence formula |
-| Reranking cuts candidates down to `TOP_K=5` | Limits what actually reaches the generation prompt, keeping the context window usage predictable and the signal-to-noise ratio high |
+| Reranking cuts chunks down to `TOP_K=5` | Re-ranked Top-k chunks (most relevant chunks) are sent to LLM for answer verfication |
 
 ## Confidence Pipeline
 
 | Choice | Rationale |
 |---|---|
-| Blended confidence: 0.6 × LLM self-confidence + 0.2 × rerank avg + 0.2 × vector avg | LLM self-reported confidence alone is known to be poorly calibrated/overconfident; anchoring it to two independent retrieval-quality signals grounds the estimate in something measurable |
+| Weighted confidence: 0.6 × LLM self-confidence + 0.2 × rerank avg + 0.2 × vector avg | LLM self-reported confidence alone is known to be poorly calibrated/overconfident; anchoring it to two independent retrieval-quality signals grounds the estimate in something measurable |
 | Fixed threshold (`CONFIDENCE_THRESHOLD = 0.60`) with an explicit fallback message | Prevents a low-grounding answer from reaching the user framed as if it were reliable — fails closed rather than open |
 | Confidence computed *before* the verification step, not after | Cheap answers get filtered out before spending an extra LLM call on claim verification/regeneration |
 
@@ -27,17 +27,26 @@
 
 | Choice | Rationale |
 |---|---|
-| Upfront classification into SAFE / DANGEROUS / EMERGENCY / other | Acts as a cheap gate before any retrieval or generation compute is spent — emergencies get a fixed, immediate safety message rather than a generated one |
+| Query classification into SAFE / DANGEROUS / EMERGENCY  | Acts as a cheap gate before any retrieval or generation compute is spent — emergencies get a fixed, immediate safety message rather than a generated one |
 | EMERGENCY and DANGEROUS short-circuit the entire pipeline | Avoids ever letting the LLM freeform a response to a medical emergency or unsafe query — the response is a fixed string, not model output |
-| Unrecognized/ambiguous classifier output sets a `caution` flag but still proceeds | Fails permissive rather than blocking legitimate queries the classifier didn't cleanly bucket, while still flagging the response as needing extra care downstream |
+| Unrecognized/ambiguous classifier output sets a `caution` flag but still proceeds | Prefers allowing queries over blocking them, while flagging them for extra attention. |
 
-## Answer Verification
+## Answer Verification and Regeneration
 
 | Choice | Rationale |
 |---|---|
-| Post-hoc claim check (`verify_final_answer`) separate from the original generation call | Treats generation and verification as two different jobs — the model that verifies isn't anchored to its own generation reasoning trace, closer to a second opinion |
+| Post claim check (`verify_final_answer`) separate from the original generation call | The answer by the system is verified whether is has proper_citations and dangerous medical advice |
 | Structured `Claims` schema (`is_dangerous`, `is_missing_citations`, `changes_to_be_made`) | Makes the verification output machine-actionable instead of free text — the regeneration prompt is built directly from `changes_to_be_made` |
-| Regeneration only triggered conditionally (`is_dangerous or is_missing_citations`) | Avoids the cost of a second generation call when the first answer already passes; only pays for regeneration when there's an actual finding |
+| Regeneration only triggered conditionally (`is_dangerous or is_missing_citations`) | Avoids the cost of a second generation call when the first answer already passes; only pays for regeneration when there's an mistake / inaccuracy in the answer |
+
+## Regeneration
+
+| Choice | Reason |
+|---|---|
+| Regenerate answers only when verification detects issues | Avoids unnecessary LLM calls, reducing latency and computational cost. |
+| Use verifier feedback (`changes_to_be_made`) to guide regeneration | Ensures the regenerated answer directly addresses the issues found during verification instead of generating a completely new response. |
+| Preserve retrieved context during regeneration | Keeps the regenerated answer grounded in the same supporting evidence rather than introducing new unsupported information. |
+| Generate only one corrected response | Prevents repeated regeneration loops, keeping response time predictable and avoiding unnecessary computation. |
 
 ## Batch Processing
 
@@ -56,7 +65,7 @@
 | PDF ingestion (`ingestion_others`) is treated as a separate "knowledge expansion" step, run after the core CSV ingestion | Lets the base MedQuAD knowledge base come online first, with the PDF folder acting as an incremental/expandable knowledge source that can grow independently over time |
 | `chunk_by_title` (not fixed-size) for PDFs specifically | Keeps semantically related content together — a chunk boundary lands on a section break rather than mid-paragraph |
 
-## Other Choices Worth Noting
+## Other Choices 
 
 | Choice | Rationale |
 |---|---|
