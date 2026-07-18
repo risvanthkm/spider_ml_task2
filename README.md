@@ -182,6 +182,9 @@ The custom LSTM converged in approximately **20 epochs**. After experimenting wi
 | **Loss Function** | MSELoss |
 | **Epochs** | 20 |
 
+## Visualization
+![LSTM Predictions and Labels](/base_task/Transformer/outputs/y_and_y_hat.png)
+
 ## Sequence Length Considerations
 
 The model was trained using a 72-hour input sequence to forecast the next 12 hours of temperature. Selecting a shorter sequences may fail to capture long-term weather patterns, while excessively long sequences increase computational cost and can introduce redundant information. 
@@ -220,6 +223,9 @@ The model was trained using a 72-hour input sequence to forecast the next 12 hou
 | **Mean Absolute Error (MAE)** | **0.1336** |
 | **Mean Squared Error (MSE)** | **0.0412** |
 | **Huber Loss** | **0.0204** |
+
+## Visualization
+![Transformer Predictions and Labels](/base_task/Transformer/outputs/y_and_y_hat.png)
 
 ## Model Architecture 
 
