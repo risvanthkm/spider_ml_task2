@@ -63,7 +63,7 @@
 | MedQuAD CSV parsed directly into `Document` objects (no chunking) | Each row is already a self-contained Q&A unit with a `focus_area`, so no chunking step adds value — chunking is only needed for unstructured, long-form documents |
 | PDFs go through a heavier path: `partition_pdf(strategy="hi_res", infer_table_structure=True)` → `chunk_by_title` | PDFs can contain tables, headers, and layout information a plain text extractor would flatten; hi-res partitioning plus table inference preserves that structure before chunking |
 | PDF ingestion (`ingestion_others`) is treated as a separate "knowledge expansion" step, run after the core CSV ingestion | Lets the base MedQuAD knowledge base come online first, with the PDF folder acting as an incremental/expandable knowledge source that can grow independently over time |
-| `chunk_by_title` (not fixed-size) for PDFs specifically | Keeps semantically related content together — a chunk boundary lands on a section break rather than mid-paragraph |
+| `chunk_by_title` for PDFs specifically | Keeps semantically related content together — a chunk boundary lands on a section break rather than mid-paragraph |
 
 ## Other Choices 
 
