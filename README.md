@@ -61,34 +61,34 @@ flowchart TD
     style J fill:#FADBD8,stroke:#C0392B,stroke-width:2px,color:#000
 ```
 
-## Performance Metrics
-
-The trained ResNet model was evaluated on the **CIFAR-10** test set using standard classification metrics.
+## Test Performance Summary
 
 | Metric | Value |
-|---------|------:|
-| **Test Accuracy** | **88.39%** |
-| **Macro Precision** | **88.64%** |
-| **Macro Recall** | **88.39%** |
-| **Macro F1-Score** | **88.38%** |
-| **Weighted Precision** | **88.64%** |
-| **Weighted Recall** | **88.39%** |
-| **Weighted F1-Score** | **88.38%** |
+|--------|------:|
+| **Test Accuracy** | **88.93%** |
+| **Test Samples** | **10,000** |
+| **Macro Precision** | **0.8907** |
+| **Macro Recall** | **0.8893** |
+| **Macro F1-Score** | **0.8884** |
+| **Weighted Precision** | **0.8907** |
+| **Weighted Recall** | **0.8893** |
+| **Weighted F1-Score** | **0.8884** |
 
-### Class-wise Performance
+### Per-Class Classification Report
 
-| Class | Precision | Recall | F1-Score |
-|-------|----------:|--------:|----------:|
-| Airplane | 89.68% | 87.80% | 88.73% |
-| Automobile | 94.49% | 94.40% | 94.45% |
-| Bird | 85.10% | 85.10% | 85.10% |
-| Cat | 83.75% | 73.70% | 78.40% |
-| Deer | 88.44% | 87.20% | 87.81% |
-| Dog | 81.23% | 87.00% | 84.02% |
-| Frog | 80.03% | 96.60% | 87.54% |
-| Horse | 94.39% | 89.20% | 91.72% |
-| Ship | 95.20% | 89.20% | 92.10% |
-| Truck | 94.08% | 93.70% | 93.89% |
+| Class | Precision | Recall | F1-Score | Support |
+|----------------|----------:|-------:|---------:|--------:|
+| Airplane | 0.8970 | 0.8970 | 0.8970 | 1000 |
+| Automobile | 0.9669 | 0.9340 | 0.9502 | 1000 |
+| Bird | 0.9141 | 0.7870 | 0.8458 | 1000 |
+| Cat | 0.8440 | 0.7140 | 0.7736 | 1000 |
+| Deer | 0.8466 | 0.9270 | 0.8850 | 1000 |
+| Dog | 0.7897 | 0.8900 | 0.8369 | 1000 |
+| Frog | 0.9170 | 0.9170 | 0.9170 | 1000 |
+| Horse | 0.9025 | 0.9260 | 0.9141 | 1000 |
+| Ship | 0.9172 | 0.9410 | 0.9289 | 1000 |
+| Truck | 0.9117 | 0.9600 | 0.9352 | 1000 |
+
 
 ### Key Observations
 
