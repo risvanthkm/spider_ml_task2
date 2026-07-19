@@ -315,7 +315,7 @@ flowchart TD
 <img width="1920" height="868" alt="Screenshot from 2026-07-19 11-58-20" src="https://github.com/user-attachments/assets/9c13ffe9-c71b-4ae8-ac26-776029d6263a" />
 <img width="1920" height="868" alt="image" src="https://github.com/user-attachments/assets/6f2d93ed-d731-47f0-9b3e-def121b23c6a" />
 
-[Sample Queries and Answers](/Applied_ML/output/trustymed-conversation-2026-07-18(1).md)
+[Sample Queries and Answers](Applied_ML/outputs/trustymed-conversation-2026-07-18(1).md)
 
 
 ---
