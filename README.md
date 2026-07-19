@@ -182,7 +182,7 @@ The custom LSTM converged in approximately **20 epochs**. After experimenting wi
 | **Loss Function** | MSELoss |
 | **Epochs** | 20 |
 
-## Visualization
+## Visualization ( Test Dataset )
 ![LSTM Predictions and Labels](/base_task/Transformer/outputs/y_and_y_hat.png)
 
 ## Sequence Length Considerations
@@ -224,7 +224,7 @@ The model was trained using a 72-hour input sequence to forecast the next 12 hou
 | **Mean Squared Error (MSE)** | **0.0412** |
 | **Huber Loss** | **0.0204** |
 
-## Visualization
+## Visualization ( Test Dataset )
 ![Transformer Predictions and Labels](/base_task/Transformer/outputs/y_and_y_hat.png)
 
 ## Model Architecture 
@@ -305,6 +305,12 @@ flowchart TD
 - **Confidence Pipeline** – Computes a final confidence score by combining LLM self-confidence, retrieval similarity, and reranker scores.
 - **Safety Guardrails** – Detects dangerous or emergency medical queries and returns appropriate safety guidance instead of unsupported medical advice.
 - **Transparent Citations** – Returns evidence sources and document references alongside every generated response.
+
+## Sample Queries and Answers 
+
+<img width="1920" height="868" alt="Screenshot from 2026-07-19 11-58-20" src="https://github.com/user-attachments/assets/9c13ffe9-c71b-4ae8-ac26-776029d6263a" />
+<img width="1920" height="868" alt="image" src="https://github.com/user-attachments/assets/6f2d93ed-d731-47f0-9b3e-def121b23c6a" />
+
 
 
 [View Model Architecture](/Applied_ML/architecture/pipeline_architecture.md)
