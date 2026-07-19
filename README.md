@@ -294,6 +294,8 @@ flowchart TD
 ## Overview
 > Built an healthcare Retrieval-Augmented Generation (RAG) system that answers medical queries using evidence from trusted sources, featuring query classification, reranking, knowledge expansion, answer verification, confidence scoring, and source citations
 
+[View Model Architecture](/Applied_ML/architecture/pipeline_architecture.md)
+
 ## Features
 
 - **Query Classification** – Categorizes user queries into **Safe**, **Dangerous**, or **Emergency** before retrieval.
@@ -306,16 +308,15 @@ flowchart TD
 - **Safety Guardrails** – Detects dangerous or emergency medical queries and returns appropriate safety guidance instead of unsupported medical advice.
 - **Transparent Citations** – Returns evidence sources and document references alongside every generated response.
 
-## Sample Queries and Answers 
+[Read Design Choices](/base_task/report/Comparison.md)
+
+## Sample Query and Answer
 
 <img width="1920" height="868" alt="Screenshot from 2026-07-19 11-58-20" src="https://github.com/user-attachments/assets/9c13ffe9-c71b-4ae8-ac26-776029d6263a" />
 <img width="1920" height="868" alt="image" src="https://github.com/user-attachments/assets/6f2d93ed-d731-47f0-9b3e-def121b23c6a" />
 
+[Sample Queries and Answers](/Applied_ML/output/trustymed-conversation-2026-07-18(1).md)
 
-
-[View Model Architecture](/Applied_ML/architecture/pipeline_architecture.md)
-
-[Read Design Choices](/base_task/report/Comparison.md)
 
 ---
 
