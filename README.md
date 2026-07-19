@@ -285,6 +285,8 @@ flowchart TD
 
 - Training and validation metrics showed no improvement after approximately **100 epochs**. Therefore, the model was trained for **100 epochs**.
 
+[Read Comparison between Transformer and LSTM](/base_task/report/Comparison.md)
+
 # Applied ML - TrustyMed
 
 ## Overview
