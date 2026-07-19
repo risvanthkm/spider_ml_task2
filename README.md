@@ -281,7 +281,7 @@ flowchart TD
 
 - During the initial experiments, the Transformer showed aggressive overfitting. Introducing **Dropout** significantly improved the model's ability to generalize by _reducing reliance on specific neurons_.
 
-- Without a learning rate scheduler, the model struggled to generalize, with the test accuracy plateauing below **88%**. Using a **learning rate scheduler** improved convergence, reduced overfitting, and led to substantially better test performance.
+- Without a learning rate scheduler, the model struggled to generalize, with the test accuracy plateauing below **88%**. Using a **learning rate scheduler** improved convergence, reduced overfitting, and led to substantially better test performance (test accuracy of 96%).
 
 - Training and validation metrics showed no improvement after approximately **100 epochs**. Therefore, the model was trained for **100 epochs**.
 
