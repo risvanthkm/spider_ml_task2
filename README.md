@@ -104,7 +104,7 @@ flowchart TD
 
 - The model was trained for **75 epochs**, as the training and validation losses began to stabilize around this point. Extending training beyond this offered only marginal improvements while increasing the risk of overfitting.
 
-- Data augmentation had a significant impact on model performance. Initially, the model achieved approximately **82% test accuracy** using only normalization. Introducing **Random Crop** and **Random Horizontal Flip** increased the accuracy to around **86%**, demonstrating the effectiveness of augmentation in improving generalization on unseen images.
+- Data augmentation had a significant impact on model performance. Initially, the model achieved approximately **82% test accuracy** using only normalization. Introducing **Random Crop** and **Random Horizontal Flip** increased the accuracy to around **88%**, demonstrating the effectiveness of augmentation in improving generalization on unseen images.
 
 - Also **Dropout** of 0.2 contributed preventing the overfitting. Experimented with various values but 0.2 was giving better results
 
