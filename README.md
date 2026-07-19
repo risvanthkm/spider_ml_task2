@@ -287,6 +287,8 @@ flowchart TD
 
 [Read Comparison between Transformer and LSTM](/base_task/report/Comparison.md)
 
+---
+
 # Applied ML - TrustyMed
 
 ## Overview
@@ -310,3 +312,5 @@ flowchart TD
 [Read Design Choices](/base_task/report/Comparison.md)
 
 ---
+
+## Thank You 
