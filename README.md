@@ -183,6 +183,9 @@ The custom LSTM converged in approximately **20 epochs**. After experimenting wi
 | **Epochs** | 20 |
 
 ## Visualization ( Test Dataset )
+
+Observed very good overlap of Labels and Predictions 
+
 ![LSTM Predictions and Labels](/base_task/Transformer/outputs/y_and_y_hat.png)
 
 ## Sequence Length Considerations
@@ -225,6 +228,9 @@ The model was trained using a 72-hour input sequence to forecast the next 12 hou
 | **Huber Loss** | **0.0204** |
 
 ## Visualization ( Test Dataset )
+
+Observed very good overlap of Labels and Predictions
+
 ![Transformer Predictions and Labels](/base_task/Transformer/outputs/y_and_y_hat.png)
 
 ## Model Architecture 
